@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection.PortableExecutable;
+using System.Text;
 
 namespace My_Game
 
@@ -132,12 +136,4 @@ namespace My_Game
         }
 
     }
-}
-
-using System;
-
-namespace My_Game
-
-{
-
 }

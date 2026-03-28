@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My_Game", "ConsoleApp1\My_Game.csproj", "{1EC3A2B9-F43B-4DD3-8B18-59CDDDBB5C6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My_Game", "My_rpg_Game\My_Game.csproj", "{19A6AEE9-0C88-2B38-4350-EC74CFF3A748}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1EC3A2B9-F43B-4DD3-8B18-59CDDDBB5C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EC3A2B9-F43B-4DD3-8B18-59CDDDBB5C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1EC3A2B9-F43B-4DD3-8B18-59CDDDBB5C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1EC3A2B9-F43B-4DD3-8B18-59CDDDBB5C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A6AEE9-0C88-2B38-4350-EC74CFF3A748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A6AEE9-0C88-2B38-4350-EC74CFF3A748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A6AEE9-0C88-2B38-4350-EC74CFF3A748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A6AEE9-0C88-2B38-4350-EC74CFF3A748}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
