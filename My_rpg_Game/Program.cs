@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection.PortableExecutable;
 using System.Text;
-namespace ConsoleApp1
+namespace My_Game
 {
     // ========== ИНТЕРФЕЙС ДЛЯ РЕСУРСОВ ==========
     // ========== КЛАСС С РЕАЛИЗАЦИЕЙ ИНТЕРФЕЙСА ==========

@@ -1,0 +1,5 @@
+C:\Users\Admin\Source\Repos\volkov-strategy-game\My_rpg_Game\obj\Debug\net8.0\My_Game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Source\Repos\volkov-strategy-game\My_rpg_Game\obj\Debug\net8.0\My_Game.AssemblyInfoInputs.cache
+C:\Users\Admin\Source\Repos\volkov-strategy-game\My_rpg_Game\obj\Debug\net8.0\My_Game.AssemblyInfo.cs
+C:\Users\Admin\Source\Repos\volkov-strategy-game\My_rpg_Game\obj\Debug\net8.0\My_Game.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Source\Repos\volkov-strategy-game\My_rpg_Game\obj\Debug\net8.0\My_Game.sourcelink.json

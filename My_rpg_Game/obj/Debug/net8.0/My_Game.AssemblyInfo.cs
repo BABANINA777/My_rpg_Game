@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("ConsoleApp1")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("My_Game")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bcaff79220840072a1798b918953c37037c75f9")]
-[assembly: System.Reflection.AssemblyProductAttribute("ConsoleApp1")]
-[assembly: System.Reflection.AssemblyTitleAttribute("ConsoleApp1")]
+[assembly: System.Reflection.AssemblyProductAttribute("My_Game")]
+[assembly: System.Reflection.AssemblyTitleAttribute("My_Game")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Создано классом WriteCodeFragment MSBuild.
