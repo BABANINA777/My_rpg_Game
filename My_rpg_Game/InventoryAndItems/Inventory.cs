@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics;
 
 namespace My_Game
 
@@ -10,10 +10,10 @@ namespace My_Game
         public static List<Item> ItemEquipList = new();
         public static List<Item> ItemNotEquipList = new()
     {
-        new Item("EpicHelmet", 'H', "Эпический шлем (+10 защита)", 0),
-        new Item("RareHelmet", 'H', "Редкий шлем (+5 защита)", 0),
-        new Item("LegendSword", 'S', "Легендарный меч (+10 урон)", 3),
-        new Item("Shield", 'D', "Щит (+3 защита)", 1)
+        new Item("EpicHelmet", 'H', "Эпический шлем (+10 защита)", 0,2),
+        new Item("RareHelmet", 'H', "Редкий шлем (+5 защита)", 0,2),
+        new Item("LegendSword", 'S', "Легендарный меч (+10 урон)", 3, 2),
+        new Item("Shield", 'D', "Щит (+3 защита)", 1, 2)
     };
         public static char[] ItemEquipHud = new char[6] { ' ', ' ', ' ', ' ', ' ', ' ' };
 
@@ -41,6 +41,8 @@ namespace My_Game
                 if (ItemEquipHud[SelectedItem.HudIndex] == ' ')// проверка надет-ли предмет с такимже HudIndex
                 {
                     ItemEquipList.Add(ItemNotEquipList[PlayerChoise - 1]);// добавляем его в список надетых
+
+                    //Execution.Player_1.PlayerRPGClass_1.class_state.damage += SelectedItem.;
 
                     ItemNotEquipList.RemoveAt(PlayerChoise - 1); // удаляем его из списка НЕнадетых
 
@@ -81,6 +83,7 @@ namespace My_Game
                     writer.WriteLine(item.Symbol);
                     writer.WriteLine(item.Description);
                     writer.WriteLine(item.HudIndex);
+                    writer.WriteLine(item.Price);
                 }
                 foreach (Item item in ItemNotEquipList)
                 {
@@ -88,6 +91,7 @@ namespace My_Game
                     writer.WriteLine(item.Symbol);
                     writer.WriteLine(item.Description);
                     writer.WriteLine(item.HudIndex);
+                    writer.WriteLine(item.Price);
                 }
                 foreach (char hudsymbol in ItemEquipHud)
                 {
@@ -110,8 +114,9 @@ namespace My_Game
                     char symbol = (char)reader.ReadLine()[0];// Читаем символ предмета
                     string description = reader.ReadLine();
                     string hudindex = reader.ReadLine();
+                    string price = reader.ReadLine();
                     // Создаём слот и добавляем в список
-                    Item item = new Item(name, symbol, description, int.Parse(hudindex));
+                    Item item = new Item(name, symbol, description, int.Parse(hudindex), int.Parse(price));
                     ItemEquipList.Add(item);
                 }
                 for (int i = 0; i < ItemNotEquipListCount; i++) // Читаем каждый слот
@@ -120,8 +125,9 @@ namespace My_Game
                     char symbol = (char)reader.ReadLine()[0];// Читаем символ предмета
                     string description = reader.ReadLine();
                     string hudindex = reader.ReadLine();
+                    string price = reader.ReadLine();
                     // Создаём слот и добавляем в список
-                    Item item = new Item(name, symbol, description, int.Parse(hudindex));
+                    Item item = new Item(name, symbol, description, int.Parse(hudindex), int.Parse(price));
                     ItemNotEquipList.Add(item);
                 }
                 for (int i = 0; i < 6; i++)

@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿using System.Text;
 namespace My_Game
 
 {
@@ -32,6 +31,7 @@ namespace My_Game
             OnStep += IsWall;                  // проверка на стену
             OnStep += Building.OnPlayerStep;   // проверка здания
             OnStep += Monster.OnPlayerStep;
+
 
             // Основной игровой цикл (выполняется бесконечно)
             while (true)
@@ -79,11 +79,35 @@ namespace My_Game
             GameState.map[2, 2] = 'H'; // Символ казармы на карте
 
             //Создание и добавление монстров
-            Monster Goblin = new Monster(30, 5, 1, "Goblin", 8, 1);
-            Monster Skeleton = new Monster(20, 10, 3, "Skeleton", 5, 3);
-            Monster.MonsterList.Add(Goblin);
-            Monster.MonsterList.Add(Skeleton);
+            // Слабые монстры (Слизни и Крысы) - мало HP, слабый урон, нет брони
+            Monster.MonsterList.Add(new Monster(30, 5, 1, "Goblin", 8, 1));
+            Monster.MonsterList.Add(new Monster(20, 10, 3, "Skeleton", 5, 3));
+            Monster.MonsterList.Add(new Monster(15, 3, 0, "Slime", 10, 2));
+            Monster.MonsterList.Add(new Monster(20, 4, 0, "Giant Rat", 15, 3));
+            Monster.MonsterList.Add(new Monster(25, 5, 1, "Wolf", 20, 5));
+
+            // Средние монстры (Орки и Зомби) - больше HP, средний урон и броня
+            Monster.MonsterList.Add(new Monster(50, 8, 2, "Orc Warrior", 30, 8));
+            Monster.MonsterList.Add(new Monster(45, 10, 1, "Zombie", 35, 10));
+            Monster.MonsterList.Add(new Monster(60, 12, 3, "Armored Skeleton", 40, 15));
+
+            // Сильные монстры (Тролль и Демон) - много HP, сильный урон, крепкая броня
+            Monster.MonsterList.Add(new Monster(120, 18, 5, "Cave Troll", 50, 20));
+            Monster.MonsterList.Add(new Monster(150, 25, 7, "Lesser Demon", 80, 22));
             foreach (var i in Monster.MonsterList) { GameState.map[i.monster_cordy, i.monster_cordx] = 'M'; }
+
+            // Создаем квест
+            Quest firstQuest = new Quest(
+                QuestID.KillStrongMonsters,
+                "Очищение земель",
+                "Убейте монстров чья сила >= 150)."
+            );
+
+            // Добавляем его в список квестов игрока
+            Quest.ActiveQuests.Add(firstQuest);
+
+            // Подписываем ЕГО личный метод проверки на глобальное событие шагов
+            OnStep += firstQuest.CheckProgress;
         }
 
         // Метод отрисовки карты в консоли
@@ -145,9 +169,8 @@ namespace My_Game
                 }
             }
 
-            // Подсказки управления
-            Console.WriteLine("_______________________");
-            Console.WriteLine("Управление: Стрелки - движение, C - строить, Enter - новый день, F5 - сохранить, F9 - загрузить, I - инвентарь");
+
+
         }
 
         // Метод обработки нажатия клавиши
@@ -172,6 +195,8 @@ namespace My_Game
                 case ConsoleKey.Enter: GameState.DayOfWeek(); break; // Следующий день
                 case ConsoleKey.C: Building.BuildBuilding(); break; // Строить здание
                 case ConsoleKey.I: Inventory.InventoryUI(); break; // Открыть инвентарь
+                case ConsoleKey.Escape: Menu.DrawMenu(); break; // вызов меню
+
             }
         }
 

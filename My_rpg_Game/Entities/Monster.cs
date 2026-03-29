@@ -1,12 +1,11 @@
-using System;
-
 namespace My_Game
 
 {
     // ========== КЛАСС Monster ==========
     // Задаются расположение и характеристеки монстров
-    class Monster
+    class Monster : IComparable<Monster>
     {
+
         public static List<Monster> MonsterList = new();
         public int monster_hp { get; set; }
         public int monster_damage { get; set; }
@@ -15,6 +14,46 @@ namespace My_Game
         public int monster_cordx { get; set; }
         public int monster_cordy { get; set; }
         public char monster_char = 'M';
+
+        // Вычисляемое свойство для "Очков силы" монстра
+        // Оно автоматически считает значение по твоей формуле
+        public double PowerScore
+        {
+            get
+            {
+                // 1. Вычисляем множитель снижения урона (по правилам твоего боя)
+                double damageReduction = 1.0 - (monster_armor * 0.08);
+
+                // Защита от бессмертных монстров (если броня >= 13, снижение будет <= 0)
+                if (damageReduction <= 0.05)
+                {
+                    damageReduction = 0.05; // Оставляем монстру получение хотя бы 5% урона
+                }
+
+                // 2. Считаем эффективное здоровье
+                double effectiveHp = monster_hp / damageReduction;
+
+                // 3. Итоговая сила: Эффективное здоровье * Урон
+                return effectiveHp * monster_damage;
+            }
+        }
+
+        // реализация интерфейса для сортировки
+        public int CompareTo(Monster other)
+        {
+            if (other == null) return 1;
+
+            // Сравниваем здоровье текущего юнита со здоровьем другого
+            return this.PowerScore.CompareTo(other.PowerScore);
+        }
+
+        //
+        public int MonsterCheck(Monster monster)
+        {
+            if (monster.PowerScore > 30) return 1;
+            else;
+            return 0;
+        }
 
         public Monster(int monster_hp, int monster_damage, int monster_armor, string monster_name, int monster_cordx, int monster_cordy)
         {
@@ -96,12 +135,12 @@ namespace My_Game
                     }
                     else
                     {
-                        Console.WriteLine("ПОРАЖЕНИЕ! Вы погибли...");
-                        Console.WriteLine($"У монстра осталось {monster.monster_hp} HP");
+                        GameState.GameOver();
                     }
                     Console.WriteLine("====================");
                     Console.WriteLine("Нажмите любую клавишу...");
                     Console.ReadKey();
+
                     break;
 
                 default:
@@ -130,6 +169,8 @@ namespace My_Game
                 cancel = true;
             }
         }
+
+        
 
     }
 }

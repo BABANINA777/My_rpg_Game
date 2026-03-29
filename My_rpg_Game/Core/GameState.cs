@@ -1,5 +1,3 @@
-using System;
-
 namespace My_Game
 
 {
@@ -13,6 +11,54 @@ namespace My_Game
         // Игровое время
         public static int day = 1;   // Текущий день (1-7)
         public static int week = 1;  // Текущая неделя
+
+        // 1. Метод, который создает наше замыкание
+        public static Action CreateWeeklyEventGenerator()
+        {
+            Random rnd = new Random();
+            int eventCounter = 0; // Эта переменная будет "замкнута" и сохранит свое значение между вызовами!
+
+            // Возвращаем безымянную функцию (Action), которая имеет доступ к eventCounter и rnd
+            return () =>
+            {
+                eventCounter++; // Увеличиваем замкнутый счетчик
+
+                Console.Clear();
+                Console.WriteLine($"\n=== СОБЫТИЕ НЕДЕЛИ (Событие №{eventCounter}) ===");
+
+                int eventType = rnd.Next(1, 4); // Случайное число 1, 2 или 3
+
+                switch (eventType)
+                {
+                    case 1:
+                        Execution.Player_1.gold += 5;
+                        Console.WriteLine("Караван торговцев: Вы нашли оброненный кошель! +5 золота.");
+                        break;
+                    case 2:
+                        Execution.Player_1.wood += 5;
+                        Execution.Player_1.stone += 5;
+                        Console.WriteLine("Удачная находка: Вы наткнулись на заброшенную телегу! +5 дерева, +5 камня.");
+                        break;
+                    case 3:
+                        if (Execution.Player_1.player_hp <= 90)
+                        {
+                            Execution.Player_1.player_hp += 10;
+                            Console.WriteLine("Благословение природы: Вы чувствуете прилив сил! +10 HP.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Спокойная неделя: Ничего необычного не произошло.");
+                        }
+                        break;
+                }
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+            };
+        }
+
+        // 2. Статическая переменная, которая вызывает метод и навсегда сохраняет внутри себя ту самую лямбда-функцию со счетчиком
+        public static Action WeeklyEvent = CreateWeeklyEventGenerator();
+
 
         // Метод перехода на следующий день
         public static void DayOfWeek()
@@ -33,6 +79,7 @@ namespace My_Game
             {
                 week++; // Увеличиваем номер недели
                 day = 1; // Сбрасываем день на первый
+                WeeklyEvent(); //вызов метода для еженельных ивентов(замыкание)
             }
         }
 
@@ -126,6 +173,47 @@ namespace My_Game
 
             Console.WriteLine("Игра загружена!");
             Console.ReadKey();
+        }
+
+        // Метод окончания игры (Смерть)
+        public static void GameOver()
+        {
+            while (true) // Бесконечный цикл, пока игрок не сделает правильный выбор
+            {
+                Console.Clear();
+                Console.WriteLine("=======================================");
+                Console.WriteLine("             ИГРА ОКОНЧЕНА             ");
+                Console.WriteLine("=======================================");
+                Console.WriteLine("Вы доблестно сражались, но пали в бою...");
+                Console.WriteLine();
+                Console.WriteLine("Что будем делать дальше?");
+                Console.WriteLine("1 - Загрузить последнее сохранение");
+                Console.WriteLine("2 - Выйти из игры");
+
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.D1 || key == ConsoleKey.NumPad1)
+                {
+                    // Пытаемся загрузить игру
+                    try
+                    {
+                        LoadGame();
+                        return;     // Выходим из метода GameOver, чтобы продолжился основной игровой цикл
+                    }
+                    catch (Exception)
+                    {
+                        // Защита от вылета: если файла SaveGame.txt нет (игрок ни разу не сохранялся)
+                        Console.WriteLine("\n[Ошибка] Файл сохранения не найден или поврежден!");
+                        Console.WriteLine("Нажмите любую клавишу...");
+                        Console.ReadKey();
+                    }
+                }
+                else if (key == ConsoleKey.D2 || key == ConsoleKey.NumPad2)
+                {
+                    
+                    Environment.Exit(0);
+                }
+            }
         }
     }
 }

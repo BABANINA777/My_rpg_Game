@@ -1,4 +1,3 @@
-using System;
 namespace My_Game
 {
     // ========== БАЗОВЫЙ КЛАСС ЗДАНИЯ ==========
@@ -22,6 +21,7 @@ namespace My_Game
                 Console.WriteLine("1. Построить казарму (2 gold)");
                 Console.WriteLine("2. Построить ресурсное здание (1 gold)");
                 Console.WriteLine("3. Построить замок (3 gold)");
+                Console.WriteLine("4. Построить магазин (4 gold)");
                 Console.WriteLine("Любая другая клавиша - отмена");
 
                 string choice = Console.ReadLine();
@@ -67,6 +67,20 @@ namespace My_Game
                             GameState.map[Execution.cordy, Execution.cordx + 1] = 'C';
                             Execution.Player_1.BuildingList.Add(newCastle);
                             Console.WriteLine("Замок построен!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("У вас недостаточно золота");
+                        }
+                        break;
+                    case "4": // Строим магазин
+                        if (Execution.Player_1.gold >= 4)
+                        {
+                            Execution.Player_1.gold -= 4;
+                            Shop newShop = new Shop(Execution.cordy, Execution.cordx + 1);
+                            GameState.map[Execution.cordy, Execution.cordx + 1] = '$'; // Рисуем символ $ на карте
+                            Execution.Player_1.BuildingList.Add(newShop);
+                            Console.WriteLine("Магазин построен!");
                         }
                         else
                         {
