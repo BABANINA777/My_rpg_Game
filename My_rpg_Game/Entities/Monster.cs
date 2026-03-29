@@ -174,11 +174,3 @@ namespace My_Game
 
     }
 }
-
-using System;
-
-namespace My_Game
-
-{
-
-}
