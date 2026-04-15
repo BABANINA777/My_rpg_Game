@@ -54,7 +54,7 @@
             {
                 Console.Clear();
                 Console.WriteLine("=== ТОРГОВАЯ ЛАВКА ===");
-                Console.WriteLine($"Ваше золото: {Execution.Player_1.gold}");
+                Console.WriteLine($"Ваше золото: {GameState.Instance.Player_1.gold}");
                 Console.WriteLine("======================\n");
 
 
@@ -80,10 +80,10 @@
                     Item selectedItem = ShopItems[choice - 1];
 
                     // Проверка золота
-                    if (Execution.Player_1.gold >= selectedItem.Price)
+                    if (GameState.Instance.Player_1.gold >= selectedItem.Price)
                     {
-                        Execution.Player_1.gold -= selectedItem.Price; // Списываем золото
-                        Inventory.ItemNotEquipList.Add(selectedItem);  // Добавляем в инвентарь игрока
+                        GameState.Instance.Player_1.gold -= selectedItem.Price; // Списываем золото
+                        GameState.Instance.ItemNotEquipList.Add(selectedItem);  // Добавляем в инвентарь игрока
                         ShopItems.RemoveAt(choice - 1);                // Убираем товар с витрины
 
                         Console.WriteLine($"\nУСПЕХ! Вы купили {selectedItem.Name}.");

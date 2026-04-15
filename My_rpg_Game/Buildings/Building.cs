@@ -15,13 +15,13 @@ namespace My_Game
         public static void BuildBuilding()
         {
             // Проверяем, свободна ли клетка справа от игрока
-            if (GameState.map[Execution.cordy, Execution.cordx + 1] == ' ')
+            if (GameState.Instance.map[Execution.cordy, Execution.cordx + 1] == ' ')
             {
                 Console.WriteLine("Выберите постройку:");
-                Console.WriteLine("1. Построить казарму (2 gold)");
-                Console.WriteLine("2. Построить ресурсное здание (1 gold)");
-                Console.WriteLine("3. Построить замок (3 gold)");
-                Console.WriteLine("4. Построить магазин (4 gold)");
+                Console.WriteLine("1. Построить казарму (2 stone 2 wood)");
+                Console.WriteLine("2. Построить ресурсное здание (1 stone 1 wood)");
+                Console.WriteLine("3. Построить замок (4 stone 1 wood)");
+                Console.WriteLine("4. Построить магазин (3 gold 2 stone 2 wood)");
                 Console.WriteLine("Любая другая клавиша - отмена");
 
                 string choice = Console.ReadLine();
@@ -29,62 +29,62 @@ namespace My_Game
                 switch (choice)
                 {
                     case "1": // Строим казарму
-                        if (Execution.Player_1.gold >= 2)
+                        if (GameState.Instance.Player_1.stone >= 2 && GameState.Instance.Player_1.wood >= 2)
                         {
-                            Execution.Player_1.gold -= 2; // Списываем ресурсы
+                            GameState.Instance.Player_1.gold -= 2; // Списываем ресурсы
                             Barac newBarac = new Barac(Execution.cordy, Execution.cordx + 1);
-                            GameState.map[Execution.cordy, Execution.cordx + 1] = 'H';
-                            Execution.Player_1.BuildingList.Add(newBarac);
+                            GameState.Instance.map[Execution.cordy, Execution.cordx + 1] = 'H';
+                            GameState.Instance.Player_1.BuildingList.Add(newBarac);
                             Console.WriteLine("Казарма построена!");
                         }
                         else
                         {
-                            Console.WriteLine("У вас недостаточно золота");
+                            Console.WriteLine("У вас недостаточно ресурсов");
                         }
                         break;
 
                     case "2": // Строим ресурсное здание
-                        if (Execution.Player_1.gold >= 1)
+                        if (GameState.Instance.Player_1.stone >= 1 && GameState.Instance.Player_1.wood >= 1)
                         {
-                            Execution.Player_1.gold -= 1; // Списываем ресурсы
+                            GameState.Instance.Player_1.gold -= 1; // Списываем ресурсы
                             ResourceBuilding newResource = new ResourceBuilding(Execution.cordy, Execution.cordx + 1);
-                            GameState.map[Execution.cordy, Execution.cordx + 1] = 'R';
-                            Execution.Player_1.BuildingList.Add(newResource);
+                            GameState.Instance.map[Execution.cordy, Execution.cordx + 1] = 'R';
+                            GameState.Instance.Player_1.BuildingList.Add(newResource);
                             ResourceBuilding.ResourceBuildingCounter += 1;
                             Console.WriteLine("Ресурсное здание построено!");
                         }
                         else
                         {
-                            Console.WriteLine("У вас недостаточно золота");
+                            Console.WriteLine("У вас недостаточно ресурсов");
                         }
                         break;
 
                     case "3": // Строим замок
-                        if (Execution.Player_1.gold >= 3)
+                        if (GameState.Instance.Player_1.stone >= 4 && GameState.Instance.Player_1.wood >= 1)
                         {
-                            Execution.Player_1.gold -= 3; // Списываем ресурсы
+                            GameState.Instance.Player_1.gold -= 3; // Списываем ресурсы
                             Castle newCastle = new Castle(Execution.cordy, Execution.cordx + 1);
-                            GameState.map[Execution.cordy, Execution.cordx + 1] = 'C';
-                            Execution.Player_1.BuildingList.Add(newCastle);
+                            GameState.Instance.map[Execution.cordy, Execution.cordx + 1] = 'C';
+                            GameState.Instance.Player_1.BuildingList.Add(newCastle);
                             Console.WriteLine("Замок построен!");
                         }
                         else
                         {
-                            Console.WriteLine("У вас недостаточно золота");
+                            Console.WriteLine("У вас недостаточно ресурсов");
                         }
                         break;
                     case "4": // Строим магазин
-                        if (Execution.Player_1.gold >= 4)
+                        if (GameState.Instance.Player_1.gold >= 3 && GameState.Instance.Player_1.stone >= 2 && GameState.Instance.Player_1.wood >= 2)
                         {
-                            Execution.Player_1.gold -= 4;
+                            GameState.Instance.Player_1.gold -= 4;
                             Shop newShop = new Shop(Execution.cordy, Execution.cordx + 1);
-                            GameState.map[Execution.cordy, Execution.cordx + 1] = '$'; // Рисуем символ $ на карте
-                            Execution.Player_1.BuildingList.Add(newShop);
+                            GameState.Instance.map[Execution.cordy, Execution.cordx + 1] = '$'; // Рисуем символ $ на карте
+                            GameState.Instance.Player_1.BuildingList.Add(newShop);
                             Console.WriteLine("Магазин построен!");
                         }
                         else
                         {
-                            Console.WriteLine("У вас недостаточно золота");
+                            Console.WriteLine("У вас недостаточно ресурсов");
                         }
                         break;
 
@@ -108,7 +108,7 @@ namespace My_Game
         {
             Building found = null;
             // Проходим по всем зданиям игрока
-            foreach (Building building in Execution.Player_1.BuildingList)
+            foreach (Building building in GameState.Instance.Player_1.BuildingList)
             {
                 // Если координаты совпадают - возвращаем здание
                 if (building.PosY == y && building.PosX == x)

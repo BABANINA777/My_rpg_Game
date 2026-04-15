@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 namespace My_Game
 
 {
@@ -18,14 +19,13 @@ namespace My_Game
         public static int cordx = 1; // Новая координата X (куда пытается пойти игрок)
         public static int cordy = 1; // Новая координата Y
 
-        // Единственный объект игрока (static = один на всю игру)
-        static public Player Player_1 = new Player();
+        
 
         // Главный метод программы (точка входа)
         static void Main()
         {
-            Player_1.PlayerRPGClass_1.ChouseClass(); // Выбор класса в начале игры
-            InitMap();                                // Создание карты
+            GameState.Instance.Player_1.PlayerRPGClass_1.ChouseClass(); // Выбор класса в начале игры
+            InitGame();                                // Создание карты
             // ПОДПИСЫВАЕМСЯ НА СОБЫТИЕ
             OnStep += Resourses.OnPlayerStep;   // проверка ресурса, стоит первой т.к всегда разрешает перемещение
             OnStep += IsWall;                  // проверка на стену
@@ -42,10 +42,11 @@ namespace My_Game
                 AvailableSteps(); // Уменьшение шагов если игрок стоял на месте
             }
         }
-
+        
         // Метод инициализации карты (вызывается один раз в начале)
-        static void InitMap()
+        static void InitGame()
         {
+            
             // Проходим по всем клеткам карты
             for (int y = 0; y < height; y++)
             {
@@ -54,57 +55,57 @@ namespace My_Game
                     // Границы карты делаем стенами (#)
                     if ((y == 0) || (y == 24) || (x == 0) || (x == 99))
                     {
-                        GameState.map[y, x] = '#';
+                        GameState.Instance.map[y, x] = '#';
                     }
                     else // Всё остальное - пустое пространство
                     {
-                        GameState.map[y, x] = ' ';
+                        GameState.Instance.map[y, x] = ' ';
                     }
                 }
             }
 
             // Размещаем игрока на карте
-            GameState.map[1, 1] = '@'; // Игрок
+            GameState.Instance.map[1, 1] = '@'; // Игрок
 
             // Размещаем ресурсы
-            GameState.map[1, 4] = 'G'; // Золото
-            GameState.map[6, 2] = 'G'; // Золото
-            GameState.map[8, 5] = 'W'; // Дерево
-            GameState.map[8, 8] = 'S'; // Камень
-            GameState.map[9, 8] = 'B'; // Камень
+            GameState.Instance.map[1, 4] = 'G'; // Золото
+            GameState.Instance.map[6, 2] = 'G'; // Золото
+            GameState.Instance.map[8, 5] = 'W'; // Дерево
+            GameState.Instance.map[8, 8] = 'S'; // Камень
+            GameState.Instance.map[9, 8] = 'B'; // Камень
 
             // СОЗДАНИЕ СТАРТОВОЙ КАЗАРМЫ
             Barac startBarac = new Barac(2, 2);
-            Player_1.BuildingList.Add(startBarac);
-            GameState.map[2, 2] = 'H'; // Символ казармы на карте
+            GameState.Instance.Player_1.BuildingList.Add(startBarac);
+            GameState.Instance.map[2, 2] = 'H'; // Символ казармы на карте
 
             //Создание и добавление монстров
-            // Слабые монстры (Слизни и Крысы) - мало HP, слабый урон, нет брони
-            Monster.MonsterList.Add(new Monster(30, 5, 1, "Goblin", 8, 1));
-            Monster.MonsterList.Add(new Monster(20, 10, 3, "Skeleton", 5, 3));
-            Monster.MonsterList.Add(new Monster(15, 3, 0, "Slime", 10, 2));
-            Monster.MonsterList.Add(new Monster(20, 4, 0, "Giant Rat", 15, 3));
-            Monster.MonsterList.Add(new Monster(25, 5, 1, "Wolf", 20, 5));
+            // Слабые монстры
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.Goblin, 8, 1));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.Skeleton, 5, 3));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.Slime, 10, 2));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.GiantRat, 15, 3));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.Wolf, 20, 5));
 
-            // Средние монстры (Орки и Зомби) - больше HP, средний урон и броня
-            Monster.MonsterList.Add(new Monster(50, 8, 2, "Orc Warrior", 30, 8));
-            Monster.MonsterList.Add(new Monster(45, 10, 1, "Zombie", 35, 10));
-            Monster.MonsterList.Add(new Monster(60, 12, 3, "Armored Skeleton", 40, 15));
+            // Средние монстры
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.OrcWarrior, 30, 8));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.Zombie, 35, 10));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.ArmoredSkeleton, 40, 15));
 
-            // Сильные монстры (Тролль и Демон) - много HP, сильный урон, крепкая броня
-            Monster.MonsterList.Add(new Monster(120, 18, 5, "Cave Troll", 50, 20));
-            Monster.MonsterList.Add(new Monster(150, 25, 7, "Lesser Demon", 80, 22));
-            foreach (var i in Monster.MonsterList) { GameState.map[i.monster_cordy, i.monster_cordx] = 'M'; }
+            // Сильные монстры
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.CaveTroll, 50, 20));
+            GameState.Instance.MonstersList.Add(MonsterFactory.CreateMonster(MonsterFactory.Monster_type.LesserDemon, 80, 22));
+            foreach (var i in GameState.Instance.MonstersList) { GameState.Instance.map[i.monster_cordy, i.monster_cordx] = 'M'; }
 
             // Создаем квест
             Quest firstQuest = new Quest(
                 QuestID.KillStrongMonsters,
                 "Очищение земель",
-                "Убейте монстров чья сила >= 150)."
+                "Убейте монстров чья сила >= 50"
             );
 
             // Добавляем его в список квестов игрока
-            Quest.ActiveQuests.Add(firstQuest);
+            GameState.Instance.ActiveQuests.Add(firstQuest);
 
             // Подписываем ЕГО личный метод проверки на глобальное событие шагов
             OnStep += firstQuest.CheckProgress;
@@ -120,7 +121,7 @@ namespace My_Game
             {
                 for (int x = 0; x < width; x++)
                 {
-                    sbmap.Append(GameState.map[y, x]); // добавляем символы в sbmap 
+                    sbmap.Append(GameState.Instance.map[y, x]); // добавляем символы в sbmap 
                 }
                 sbmap.AppendLine();
             }
@@ -132,13 +133,12 @@ namespace My_Game
         {
             Console.WriteLine("_______________________");
             Console.WriteLine("Ресурсы:");
-            Console.Write($"Золото = {Player_1.gold}; ");
-            Console.Write($"Дерево = {Player_1.wood}; ");
-            Console.WriteLine($"Камень = {Player_1.stone}");
+            Console.Write($"Золото = {GameState.Instance.Player_1.gold}; ");
+            Console.Write($"Дерево = {GameState.Instance.Player_1.wood}; ");
+            Console.WriteLine($"Камень = {GameState.Instance.Player_1.stone}");
 
             Console.WriteLine("_______________________");
-            Console.WriteLine("Время:");
-            Console.WriteLine($"День: {GameState.day}  Неделя: {GameState.week}");
+            Console.WriteLine($"День: {GameState.Instance.day}  Неделя: {GameState.Instance.week}");
             if (Castle.bonusTimer > 0)
             {
                 Console.WriteLine($"Бонус замка активен! Осталось дней: {Castle.bonusTimer}");
@@ -146,24 +146,24 @@ namespace My_Game
 
             Console.WriteLine("_______________________");
             Console.WriteLine("Информация об игроке:");
-            Console.WriteLine($"Оставшиеся шаги = {Player_1.count_step}");
-            Console.WriteLine($"Класс: {Player_1.PlayerRPGClass_1.PlayerRPG}");
-            Console.WriteLine($"Здоровье: {Player_1.player_hp}");
-            Console.WriteLine($"Скорость: {Player_1.PlayerRPGClass_1.class_state.speed}");
-            Console.WriteLine($"Урон: {Player_1.PlayerRPGClass_1.class_state.damage}");
-            Console.WriteLine($"Броня: {Player_1.PlayerRPGClass_1.class_state.armor}");
-            Console.WriteLine($"Слотов юнитов: {Player_1.PlayerRPGClass_1.class_state.unit_quantity}");
+            Console.WriteLine($"Оставшиеся шаги = {GameState.Instance.Player_1.count_step}");
+            Console.WriteLine($"Класс: {GameState.Instance.Player_1.PlayerRPGClass_1.PlayerRPG}");
+            Console.WriteLine($"Здоровье: {GameState.Instance.Player_1.player_hp}");
+            Console.WriteLine($"Скорость: {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.speed}");
+            Console.WriteLine($"Урон: {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage}");
+            Console.WriteLine($"Броня: {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.armor}");
+            Console.WriteLine($"Слотов юнитов: {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.unit_quantity}");
 
             // Выводим список юнитов игрока
             Console.WriteLine("_______________________");
             Console.WriteLine("Ваши воины:");
-            if (Player_1.UnitList.Count == 0)
+            if (GameState.Instance.Player_1.UnitList.Count == 0)
             {
                 Console.WriteLine("  Нет юнитов");
             }
             else
             {
-                foreach (UnitSlot unit in Player_1.UnitList)
+                foreach (UnitSlot unit in GameState.Instance.Player_1.UnitList)
                 {
                     Console.WriteLine($"  {unit.UnitClass}: {unit.Count} шт.");
                 }
@@ -177,8 +177,8 @@ namespace My_Game
         static void ImputKey()
         {
             // Сохраняем текущие координаты игрока
-            cordx = Player_1.player_x;
-            cordy = Player_1.player_y;
+            cordx = GameState.Instance.Player_1.player_x;
+            cordy = GameState.Instance.Player_1.player_y;
 
             // Читаем нажатую клавишу
             var key = Console.ReadKey();
@@ -190,9 +190,9 @@ namespace My_Game
                 case ConsoleKey.RightArrow: cordx++; PlayerWASD(); break; // Вправо
                 case ConsoleKey.UpArrow: cordy--; PlayerWASD(); break; // Вверх
                 case ConsoleKey.DownArrow: cordy++; PlayerWASD(); break; // Вниз
-                case ConsoleKey.F5: GameState.SaveGame(); break;  // Сохранить
+                case ConsoleKey.F5: GameState.Instance.SaveGame(); break;  // Сохранить
                 case ConsoleKey.F9: GameState.LoadGame(); break;  // Загрузить
-                case ConsoleKey.Enter: GameState.DayOfWeek(); break; // Следующий день
+                case ConsoleKey.Enter: GameState.Instance.DayOfWeek(); break; // Следующий день
                 case ConsoleKey.C: Building.BuildBuilding(); break; // Строить здание
                 case ConsoleKey.I: Inventory.InventoryUI(); break; // Открыть инвентарь
                 case ConsoleKey.Escape: Menu.DrawMenu(); break; // вызов меню
@@ -204,10 +204,10 @@ namespace My_Game
         static void PlayerWASD()
         {
             // Проверяем, остались ли у игрока шаги
-            if (Player_1.count_step == 0)
+            if (GameState.Instance.Player_1.count_step == 0) 
             {
                 Console.WriteLine("У вас закончились шаги! Нажмите Enter для нового дня.");
-                Console.ReadKey();
+                
                 return;
             }
 
@@ -222,23 +222,23 @@ namespace My_Game
 
             // === БАЗОВАЯ ЛОГИКА ДВИЖЕНИЯ ===
             // Стираем игрока с текущей позиции
-            GameState.map[Player_1.player_y, Player_1.player_x] = ' ';
+            GameState.Instance.map[GameState.Instance.Player_1.player_y, GameState.Instance.Player_1.player_x] = ' ';
 
             // Перемещаем игрока на новые координаты
-            Player_1.player_x = cordx;
-            Player_1.player_y = cordy;
+            GameState.Instance.Player_1.player_x = cordx;
+            GameState.Instance.Player_1.player_y = cordy;
 
             // Рисуем игрока на новой позиции
-            GameState.map[Player_1.player_y, Player_1.player_x] = '@';
+            GameState.Instance.map[GameState.Instance.Player_1.player_y, GameState.Instance.Player_1.player_x] = '@';
 
             // Уменьшаем количество шагов
-            Player_1.count_step--;
+            GameState.Instance.Player_1.count_step--;
         }
 
         // Метод проверки: свободна ли клетка (не стена ли)
         public static void IsWall(int y, int x, ref bool cancel)
         {
-            if (GameState.map[y, x] == '#')
+            if (GameState.Instance.map[y, x] == '#')
             {
                 cancel = true; // Возвращаем true если стена
             }
@@ -250,7 +250,7 @@ namespace My_Game
         {
             // Если координаты не изменились - игрок стоял на месте
             // (например, упёрся в стену или зашёл в здание)
-            if ((cordx == Player_1.player_x) && (cordy == Player_1.player_y))
+            if ((cordx == GameState.Instance.Player_1.player_x) && (cordy == GameState.Instance.Player_1.player_y))
             {
                 // Не уменьшаем шаги - это уже сделано в PlayerWASD или не нужно
             }
@@ -281,9 +281,9 @@ namespace My_Game
             else if (ResourceBuilding.ResourceBuildingCounter > 0)
             {
                 ResourceBuilding.NewResurseTimer = 7;
-                Player_1.gold += 1 * ResourceBuilding.ResourceBuildingCounter;
-                Player_1.wood += 1 * ResourceBuilding.ResourceBuildingCounter;
-                Player_1.stone += 1 * ResourceBuilding.ResourceBuildingCounter;
+                GameState.Instance.Player_1.gold += 1 * ResourceBuilding.ResourceBuildingCounter;
+                GameState.Instance.Player_1.wood += 1 * ResourceBuilding.ResourceBuildingCounter;
+                GameState.Instance.Player_1.stone += 1 * ResourceBuilding.ResourceBuildingCounter;
             }
         }
     }

@@ -57,7 +57,7 @@ namespace My_Game
         public static void OnPlayerStep(int y, int x, ref bool cancel)
         {
             cancel = true; // всегда разрешает перемещение
-            char cell = GameState.map[y, x]; // что на клетке
+            char cell = GameState.Instance.map[y, x]; // что на клетке
 
             // Быстрый фильтр: если это не ресурс — выходим
             if (cell != 'G' && cell != 'W' && cell != 'S' && cell != 'B')
@@ -74,13 +74,13 @@ namespace My_Game
                 }
             }
             // Выдаём эффект в зависимости от символа клетки
-            if (cell == 'G') { Execution.Player_1.gold++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'W') { Execution.Player_1.wood++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'S') { Execution.Player_1.stone++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'B') { Execution.Player_1.PlayerRPGClass_1.class_state.damage += 2; Console.WriteLine($"Получен бонус +2 к урону"); Console.ReadKey(); }// бонус к урону
+            if (cell == 'G') { GameState.Instance.Player_1.gold++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'W') { GameState.Instance.Player_1.wood++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'S') { GameState.Instance.Player_1.stone++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'B') { GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage += 2; Console.WriteLine($"Получен бонус +2 к урону"); Console.ReadKey(); }// бонус к урону
 
             // Удаляем ресурс с карты
-            GameState.map[Execution.cordy, Execution.cordx] = ' ';
+            GameState.Instance.map[Execution.cordy, Execution.cordx] = ' ';
 
             //убераем объект из списка
             ResourseList.Remove(found);

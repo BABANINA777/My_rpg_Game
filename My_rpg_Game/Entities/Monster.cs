@@ -3,10 +3,10 @@ namespace My_Game
 {
     // ========== КЛАСС Monster ==========
     // Задаются расположение и характеристеки монстров
-    class Monster : IComparable<Monster>
+    public class Monster : IComparable<Monster>
     {
 
-        public static List<Monster> MonsterList = new();
+        
         public int monster_hp { get; set; }
         public int monster_damage { get; set; }
         public int monster_armor { get; set; }
@@ -14,9 +14,8 @@ namespace My_Game
         public int monster_cordx { get; set; }
         public int monster_cordy { get; set; }
         public char monster_char = 'M';
-
         // Вычисляемое свойство для "Очков силы" монстра
-        // Оно автоматически считает значение по твоей формуле
+        // Оно автоматически считает значение поформуле
         public double PowerScore
         {
             get
@@ -34,11 +33,18 @@ namespace My_Game
                 double effectiveHp = monster_hp / damageReduction;
 
                 // 3. Итоговая сила: Эффективное здоровье * Урон
-                return effectiveHp * monster_damage;
+                return (effectiveHp * monster_damage)/4;
+            }
+        }
+        public int MonsterCoast
+        {
+            get
+            {
+                return Convert.ToInt32(PowerScore);
             }
         }
 
-        // реализация интерфейса для сортировки
+        // реализация метода для сортировки
         public int CompareTo(Monster other)
         {
             if (other == null) return 1;
@@ -47,13 +53,6 @@ namespace My_Game
             return this.PowerScore.CompareTo(other.PowerScore);
         }
 
-        //
-        public int MonsterCheck(Monster monster)
-        {
-            if (monster.PowerScore > 30) return 1;
-            else;
-            return 0;
-        }
 
         public Monster(int monster_hp, int monster_damage, int monster_armor, string monster_name, int monster_cordx, int monster_cordy)
         {
@@ -68,12 +67,14 @@ namespace My_Game
         //метод с окном битвы
         public static void MonsterFight(Monster monster)
         {
+            int rewardGold = (Convert.ToInt32(monster.PowerScore / 4));
             Console.Clear();
             Console.WriteLine($"Вы встретили {monster.monster_name}");
-            Console.WriteLine($"Здоровье монстра - {monster.monster_hp}      Ваше Здоровье - {Execution.Player_1.player_hp}");
-            Console.WriteLine($"Урон монстра - {monster.monster_damage}      Ваш урон - {Execution.Player_1.PlayerRPGClass_1.class_state.damage}");
-            Console.WriteLine($"Броня монстра - {monster.monster_armor}      Ваша броня - {Execution.Player_1.PlayerRPGClass_1.class_state.armor}");
-            Console.WriteLine("Вы хотите сразиться с ним?");
+            Console.WriteLine($"Здоровье монстра - {monster.monster_hp}      Ваше Здоровье - {GameState.Instance.Player_1.player_hp}");
+            Console.WriteLine($"Урон монстра - {monster.monster_damage}      Ваш урон - {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage}");
+            Console.WriteLine($"Броня монстра - {monster.monster_armor}      Ваша броня - {GameState.Instance.Player_1.PlayerRPGClass_1.class_state.armor}");
+            Console.WriteLine($"Вы хотите сразиться с ним?");
+            Console.WriteLine($"Сила монстра - {monster.PowerScore}");
             Console.WriteLine("1 - ДА");
             Console.WriteLine("Любая клавиша - НЕТ");
 
@@ -83,24 +84,24 @@ namespace My_Game
             {
                 case "1":
                     // БОЙ: пока оба живы (HP > 0)
-                    while (monster.monster_hp > 0 && Execution.Player_1.player_hp > 0)
+                    while (monster.monster_hp > 0 && GameState.Instance.Player_1.player_hp > 0)
                     {
                         // расчет урона игрока
-                        int damageToMonster = (int)(Execution.Player_1.PlayerRPGClass_1.class_state.damage * (1 - monster.monster_armor * 0.08));
+                        int damageToMonster = (int)(GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage * (1 - monster.monster_armor * 0.08));
                         monster.monster_hp -= damageToMonster;
 
                         // расчет урона монстра
                         if (monster.monster_hp > 0)
                         {
-                            int damageToPlayer = (int)(monster.monster_damage * (1 - Execution.Player_1.PlayerRPGClass_1.class_state.armor * 0.08));
-                            Execution.Player_1.player_hp -= damageToPlayer;
+                            int damageToPlayer = (int)(monster.monster_damage * (1 - GameState.Instance.Player_1.PlayerRPGClass_1.class_state.armor * 0.08));
+                            GameState.Instance.Player_1.player_hp -= damageToPlayer;
                         }
 
                         // Показываем текущее HP
-                        Console.WriteLine($"Здоровье монстра - {monster.monster_hp}      Ваше Здоровье - {Execution.Player_1.player_hp}");
+                        Console.WriteLine($"Здоровье монстра - {monster.monster_hp}      Ваше Здоровье - {GameState.Instance.Player_1.player_hp}");
 
                         // Проверка: кто-то умер? тогда выходим
-                        if (monster.monster_hp <= 0 || Execution.Player_1.player_hp <= 0)
+                        if (monster.monster_hp <= 0 || GameState.Instance.Player_1.player_hp <= 0)
                         {
                             break;
                         }
@@ -126,12 +127,14 @@ namespace My_Game
 
                     // === ПРОВЕРКА ПОБЕДИТЕЛЯ ===
                     Console.WriteLine("\n====================");
-                    if (Execution.Player_1.player_hp > 0)
+                    if (GameState.Instance.Player_1.player_hp > 0)
                     {
                         Console.WriteLine($"ПОБЕДА! Вы победили {monster.monster_name}!");
-                        Console.WriteLine($"У вас осталось {Execution.Player_1.player_hp} HP");
-                        MonsterList.Remove(monster);
-                        GameState.map[monster.monster_cordy, monster.monster_cordx] = ' ';
+                        Console.WriteLine($"У вас осталось {GameState.Instance.Player_1.player_hp} HP");
+                        Console.WriteLine($"Вы заработали {rewardGold}");
+                        GameState.Instance.Player_1.gold += rewardGold;
+                        GameState.Instance.MonstersList.Remove(monster);
+                        GameState.Instance.map[monster.monster_cordy, monster.monster_cordx] = ' ';
                     }
                     else
                     {
@@ -155,7 +158,7 @@ namespace My_Game
         {
             Monster found = null;
             // Проходим по всем монстрам
-            foreach (Monster monster in MonsterList)
+            foreach (Monster monster in GameState.Instance.MonstersList)
             {
                 // Если координаты совпадают - возвращаем монстра
                 if (monster.monster_cordy == y && monster.monster_cordx == x)

@@ -41,7 +41,7 @@ namespace My_Game
             int count = int.Parse(Console.ReadLine());
 
             // Вызываем метод найма через объект игрока
-            Execution.Player_1.HireUnits(unitType, count);
+            GameState.Instance.Player_1.HireUnits(unitType, count);
 
             // Пауза для чтения сообщения
             Console.WriteLine("Нажмите любую клавишу для продолжения...");

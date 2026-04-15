@@ -27,9 +27,9 @@ namespace My_Game
                 Castle.bonusTimer = 7;
 
                 // Применяем бонусы
-                Execution.Player_1.PlayerRPGClass_1.class_state.speed += 2;
-                Execution.Player_1.PlayerRPGClass_1.class_state.damage += 2;
-                Execution.Player_1.PlayerRPGClass_1.class_state.unit_quantity += 1;
+                GameState.Instance.Player_1.PlayerRPGClass_1.class_state.speed += 2;
+                GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage += 2;
+                GameState.Instance.Player_1.PlayerRPGClass_1.class_state.unit_quantity += 1;
 
                 Console.WriteLine("Бонус активирован на 7 дней!");
             }
@@ -43,9 +43,9 @@ namespace My_Game
         public static void DeactivateBonus()
         {
             // Убираем бонусы
-            Execution.Player_1.PlayerRPGClass_1.class_state.speed -= 2;
-            Execution.Player_1.PlayerRPGClass_1.class_state.damage -= 2;
-            Execution.Player_1.PlayerRPGClass_1.class_state.unit_quantity -= 1;
+            GameState.Instance.Player_1.PlayerRPGClass_1.class_state.speed -= 2;
+            GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage -= 2;
+            GameState.Instance.Player_1.PlayerRPGClass_1.class_state.unit_quantity -= 1;
 
             Console.WriteLine("Бонус замка закончился!");
         }

@@ -16,13 +16,13 @@
             switch (choice)
             {
                 case 1:
-                    DrawQuest();
+                    DrawQuest(GameState.Instance.ActiveQuests[0]);
                     break;
                 case 2:
                     DrawControlInfo();
                     break;
                 case 3:
-                    GameState.SaveGame();
+                    GameState.Instance.SaveGame();
                     Environment.Exit(0);
                     break;
                 case 4:
@@ -32,16 +32,10 @@
                     return;
             }
         }
-        public static void DrawQuest()
+        public static void DrawQuest(Quest quest)
         {
-            foreach (var quest in Quest.ActiveQuests)
-            {
-                Console.WriteLine("Название:");
-                Console.WriteLine(quest.Name);
-                Console.WriteLine("Описание:");
-                Console.WriteLine(quest.Description);
-                Console.ReadKey();
-            }
+            quest.QuestInfo();
+            Console.ReadKey();
         }
 
         public static void DrawControlInfo()
