@@ -3,7 +3,7 @@ using System.Diagnostics;
 namespace My_Game
 
 {
-    // ==========  À¿—— œ–≈ƒÃ≈“Œ¬ ==========
+    // ========== √ä√ã√Ä√ë√ë √è√ê√Ö√Ñ√å√Ö√í√é√Ç ==========
     public class Item
     {
         public string Name { get; set; }
