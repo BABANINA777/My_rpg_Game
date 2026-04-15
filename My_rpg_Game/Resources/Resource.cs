@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection.PortableExecutable;
-using System.Text;
-
 namespace My_Game
 
 {
-    // ========== ИНТЕРФЕЙС ДЛЯ РЕСУРСОВ ==========
-    // ========== КЛАСС С РЕАЛИЗАЦИЕЙ ИНТЕРФЕЙСА ==========
+    // ========== Г€ГЌГ’Г…ГђГ”Г…Г‰Г‘ Г„Г‹Гџ ГђГ…Г‘Г“ГђГ‘ГЋГ‚ ==========
+    // ========== ГЉГ‹ГЂГ‘Г‘ Г‘ ГђГ…ГЂГ‹Г€Г‡ГЂГ–Г€Г…Г‰ Г€ГЌГ’Г…ГђГ”Г…Г‰Г‘ГЂ ==========
 
     public class Resourses : ICollectable
     {
@@ -19,9 +13,9 @@ namespace My_Game
             Stone,
             Bonus
         }
-        public ResourceType Type { get; }    // Тип ресурса
+        public ResourceType Type { get; }    // Г’ГЁГЇ Г°ГҐГ±ГіГ°Г±Г 
 
-        // Символ вычисляется каждый раз из Type
+        // Г‘ГЁГ¬ГўГ®Г« ГўГ»Г·ГЁГ±Г«ГїГҐГІГ±Гї ГЄГ Г¦Г¤Г»Г© Г°Г Г§ ГЁГ§ Type
         public char Symbol
         {
             get
@@ -37,18 +31,18 @@ namespace My_Game
             }
         }
 
-        // Имя вычисляется из Type
+        // Г€Г¬Гї ГўГ»Г·ГЁГ±Г«ГїГҐГІГ±Гї ГЁГ§ Type
         public string Name
         {
             get
             {
                 switch (Type)
                 {
-                    case ResourceType.Gold: return "Золото";
-                    case ResourceType.Wood: return "Дерево";
-                    case ResourceType.Stone: return "Камень";
-                    case ResourceType.Bonus: return "Бонус";
-                    default: return "Неизвестно";
+                    case ResourceType.Gold: return "Г‡Г®Г«Г®ГІГ®";
+                    case ResourceType.Wood: return "Г„ГҐГ°ГҐГўГ®";
+                    case ResourceType.Stone: return "ГЉГ Г¬ГҐГ­Гј";
+                    case ResourceType.Bonus: return "ГЃГ®Г­ГіГ±";
+                    default: return "ГЌГҐГЁГ§ГўГҐГ±ГІГ­Г®";
                 }
             }
         }
@@ -62,33 +56,33 @@ namespace My_Game
         {new Resourses((ResourceType)0), new Resourses((ResourceType)0), new Resourses((ResourceType)1), new Resourses((ResourceType)2), new Resourses((ResourceType)3) };
         public static void OnPlayerStep(int y, int x, ref bool cancel)
         {
-            cancel = true; // всегда разрешает перемещение
-            char cell = GameState.map[y, x]; // что на клетке
+            cancel = true; // ГўГ±ГҐГЈГ¤Г  Г°Г Г§Г°ГҐГёГ ГҐГІ ГЇГҐГ°ГҐГ¬ГҐГ№ГҐГ­ГЁГҐ
+            char cell = GameState.map[y, x]; // Г·ГІГ® Г­Г  ГЄГ«ГҐГІГЄГҐ
 
-            // Быстрый фильтр: если это не ресурс — выходим
+            // ГЃГ»Г±ГІГ°Г»Г© ГґГЁГ«ГјГІГ°: ГҐГ±Г«ГЁ ГЅГІГ® Г­ГҐ Г°ГҐГ±ГіГ°Г± вЂ” ГўГ»ГµГ®Г¤ГЁГ¬
             if (cell != 'G' && cell != 'W' && cell != 'S' && cell != 'B')
                 return;
 
-            // Находим ресурс, который соответствует символу клетки
+            // ГЌГ ГµГ®Г¤ГЁГ¬ Г°ГҐГ±ГіГ°Г±, ГЄГ®ГІГ®Г°Г»Г© Г±Г®Г®ГІГўГҐГІГ±ГІГўГіГҐГІ Г±ГЁГ¬ГўГ®Г«Гі ГЄГ«ГҐГІГЄГЁ
             Resourses found = null;
             foreach (var res in ResourseList)
             {
                 if (res.Symbol == cell)
                 {
                     found = res;
-                    break; // нашли — дальше не ищем
+                    break; // Г­Г ГёГ«ГЁ вЂ” Г¤Г Г«ГјГёГҐ Г­ГҐ ГЁГ№ГҐГ¬
                 }
             }
-            // Выдаём эффект в зависимости от символа клетки
-            if (cell == 'G') { Execution.Player_1.gold++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'W') { Execution.Player_1.wood++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'S') { Execution.Player_1.stone++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
-            else if (cell == 'B') { Execution.Player_1.PlayerRPGClass_1.class_state.damage += 2; Console.WriteLine($"Получен бонус +2 к урону"); Console.ReadKey(); }// бонус к урону
+            // Г‚Г»Г¤Г ВёГ¬ ГЅГґГґГҐГЄГІ Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г±ГЁГ¬ГўГ®Г«Г  ГЄГ«ГҐГІГЄГЁ
+            if (cell == 'G') { Execution.Player_1.gold++; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­Г® +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'W') { Execution.Player_1.wood++; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­Г® +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'S') { Execution.Player_1.stone++; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­Г® +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'B') { Execution.Player_1.PlayerRPGClass_1.class_state.damage += 2; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­ ГЎГ®Г­ГіГ± +2 ГЄ ГіГ°Г®Г­Гі"); Console.ReadKey(); }// ГЎГ®Г­ГіГ± ГЄ ГіГ°Г®Г­Гі
 
-            // Удаляем ресурс с карты
+            // Г“Г¤Г Г«ГїГҐГ¬ Г°ГҐГ±ГіГ°Г± Г± ГЄГ Г°ГІГ»
             GameState.map[Execution.cordy, Execution.cordx] = ' ';
 
-            //убераем объект из списка
+            //ГіГЎГҐГ°Г ГҐГ¬ Г®ГЎГєГҐГЄГІ ГЁГ§ Г±ГЇГЁГ±ГЄГ 
             ResourseList.Remove(found);
         }
     }
