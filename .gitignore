@@ -1,1 +1,22 @@
+# Скомпилированные файлы и результаты сборки
+[Bb]in/
+[Oo]bj/
+*.exe
+*.dll
+*.pdb
+
+# Скрытые настройки Visual Studio (пользовательские)
 .vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Файлы кэша и локальные логи
+*.log
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Временные файлы ОС
+Thumbs.db
+.DS_Store

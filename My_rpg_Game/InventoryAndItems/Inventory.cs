@@ -7,14 +7,7 @@ namespace My_Game
     // Управляет сохранением и загрузкой юнитов игрока
     public class Inventory
     {
-        public static List<Item> ItemEquipList = new();
-        public static List<Item> ItemNotEquipList = new()
-    {
-        new Item("EpicHelmet", 'H', "Эпический шлем (+10 защита)", 0,2),
-        new Item("RareHelmet", 'H', "Редкий шлем (+5 защита)", 0,2),
-        new Item("LegendSword", 'S', "Легендарный меч (+10 урон)", 3, 2),
-        new Item("Shield", 'D', "Щит (+3 защита)", 1, 2)
-    };
+        
         public static char[] ItemEquipHud = new char[6] { ' ', ' ', ' ', ' ', ' ', ' ' };
 
         public static void InventoryUI()
@@ -27,7 +20,7 @@ namespace My_Game
             Console.WriteLine($"    [{ItemEquipHud[5]}]     - Слот для ботинок");
             Console.WriteLine("Доступные предметы в для экиперовки:");
             int counter = 1; //счетчик для отрисовки доступных предметов
-            foreach (Item item in ItemNotEquipList)
+            foreach (Item item in GameState.Instance.ItemNotEquipList)
             {
                 Console.WriteLine($"{counter}. [{item.Symbol}] - {item.Name}, {item.Description} ");
                 counter++;
@@ -37,30 +30,30 @@ namespace My_Game
             try // логика выбора предметов
             {
                 int PlayerChoise = int.Parse(Console.ReadLine());
-                var SelectedItem = ItemNotEquipList[PlayerChoise - 1];//выбранный предмет из списка неэкеперованных
+                var SelectedItem = GameState.Instance.ItemNotEquipList[PlayerChoise - 1];//выбранный предмет из списка неэкеперованных
                 if (ItemEquipHud[SelectedItem.HudIndex] == ' ')// проверка надет-ли предмет с такимже HudIndex
                 {
-                    ItemEquipList.Add(ItemNotEquipList[PlayerChoise - 1]);// добавляем его в список надетых
+                    GameState.Instance.ItemEquipList.Add(GameState.Instance.ItemNotEquipList[PlayerChoise - 1]);// добавляем его в список надетых
 
                     //Execution.Player_1.PlayerRPGClass_1.class_state.damage += SelectedItem.;
 
-                    ItemNotEquipList.RemoveAt(PlayerChoise - 1); // удаляем его из списка НЕнадетых
+                    GameState.Instance.ItemNotEquipList.RemoveAt(PlayerChoise - 1); // удаляем его из списка НЕнадетых
 
                     ItemEquipHud[SelectedItem.HudIndex] = SelectedItem.Symbol;//добавляем его значек в массив для отображения
                 }
                 else
                 {
                     // Найти предмет с таким же HudIndex в списке экипированных
-                    Item oldItem = ItemEquipList.Find(item => item.HudIndex == SelectedItem.HudIndex);
+                    Item oldItem = GameState.Instance.ItemEquipList.Find(item => item.HudIndex == SelectedItem.HudIndex);
 
                     // Снимаем старый предмет удаляя его из списка экиперованных
-                    ItemEquipList.Remove(oldItem);
+                    GameState.Instance.ItemEquipList.Remove(oldItem);
 
-                    ItemNotEquipList.Add(oldItem);// добовляем его в список НЕэкиперованных
+                    GameState.Instance.ItemNotEquipList.Add(oldItem);// добовляем его в список НЕэкиперованных
 
                     // Надеваем новый предмет
-                    ItemEquipList.Add(SelectedItem);
-                    ItemNotEquipList.RemoveAt(PlayerChoise - 1);
+                    GameState.Instance.ItemEquipList.Add(SelectedItem);
+                    GameState.Instance.ItemNotEquipList.RemoveAt(PlayerChoise - 1);
                     ItemEquipHud[SelectedItem.HudIndex] = SelectedItem.Symbol;
                 }
                 InventoryUI();
@@ -75,9 +68,9 @@ namespace My_Game
         {
             using (StreamWriter writer = new StreamWriter("SaveGameInventory.txt", false)) // Открываем файл для записи
             {
-                writer.WriteLine(ItemEquipList.Count);// Записываем количество слотов из списка экиперованных
-                writer.WriteLine(ItemNotEquipList.Count);// Записываем количество слотов из списка неэкиперованных предметов
-                foreach (Item item in ItemEquipList)
+                writer.WriteLine(GameState.Instance.ItemEquipList.Count);// Записываем количество слотов из списка экиперованных
+                writer.WriteLine(GameState.Instance.ItemNotEquipList.Count);// Записываем количество слотов из списка неэкиперованных предметов
+                foreach (Item item in GameState.Instance.ItemEquipList)
                 {
                     writer.WriteLine(item.Name);
                     writer.WriteLine(item.Symbol);
@@ -85,7 +78,7 @@ namespace My_Game
                     writer.WriteLine(item.HudIndex);
                     writer.WriteLine(item.Price);
                 }
-                foreach (Item item in ItemNotEquipList)
+                foreach (Item item in GameState.Instance.ItemNotEquipList)
                 {
                     writer.WriteLine(item.Name);
                     writer.WriteLine(item.Symbol);
@@ -102,8 +95,8 @@ namespace My_Game
         }
         public static void LoadInventory()
         {
-            ItemEquipList.Clear();  // Очищаем текущий список перед загрузкой
-            ItemNotEquipList.Clear();  // Очищаем текущий список перед загрузкой
+            GameState.Instance.ItemEquipList.Clear();  // Очищаем текущий список перед загрузкой
+            GameState.Instance.ItemNotEquipList.Clear();  // Очищаем текущий список перед загрузкой
             using (StreamReader reader = new StreamReader("SaveGameInventory.txt")) // Открываем файл для записи
             {
                 int ItemEquipListCount = int.Parse(reader.ReadLine());
@@ -117,7 +110,7 @@ namespace My_Game
                     string price = reader.ReadLine();
                     // Создаём слот и добавляем в список
                     Item item = new Item(name, symbol, description, int.Parse(hudindex), int.Parse(price));
-                    ItemEquipList.Add(item);
+                    GameState.Instance.ItemEquipList.Add(item);
                 }
                 for (int i = 0; i < ItemNotEquipListCount; i++) // Читаем каждый слот
                 {
@@ -128,7 +121,7 @@ namespace My_Game
                     string price = reader.ReadLine();
                     // Создаём слот и добавляем в список
                     Item item = new Item(name, symbol, description, int.Parse(hudindex), int.Parse(price));
-                    ItemNotEquipList.Add(item);
+                    GameState.Instance.ItemNotEquipList.Add(item);
                 }
                 for (int i = 0; i < 6; i++)
                 {

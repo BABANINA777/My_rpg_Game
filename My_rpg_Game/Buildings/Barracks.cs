@@ -40,8 +40,13 @@ namespace My_Game
             Console.WriteLine("Êîëè÷åñòâî íàíèìàåìûõ âîèíîâ (ìàêñ â ñëîòå 99):");
             int count = int.Parse(Console.ReadLine());
 
+<<<<<<< HEAD
+            // �������� ����� ����� ����� ������ ������
+            GameState.Instance.Player_1.HireUnits(unitType, count);
+=======
             // Âûçûâàåì ìåòîä íàéìà ÷åðåç îáúåêò èãðîêà
             Execution.Player_1.HireUnits(unitType, count);
+>>>>>>> e642043cd50117782f04de6a26c579e6f756385c
 
             // Ïàóçà äëÿ ÷òåíèÿ ñîîáùåíèÿ
             Console.WriteLine("Íàæìèòå ëþáóþ êëàâèøó äëÿ ïðîäîëæåíèÿ...");

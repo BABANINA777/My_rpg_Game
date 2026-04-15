@@ -42,9 +42,9 @@ namespace My_Game
         {
             switch ((int)PlayerRPG)
             {
-                case 1: Execution.Player_1.count_step = 6; break; // Рыцарь: средняя скорость
-                case 2: Execution.Player_1.count_step = 5; break; // Маг: низкая скорость
-                case 3: Execution.Player_1.count_step = 8; break; // Рейнджер: высокая скорость
+                case 1: GameState.Instance.Player_1.count_step = 6; break; // Рыцарь: средняя скорость
+                case 2: GameState.Instance.Player_1.count_step = 5; break; // Маг: низкая скорость
+                case 3: GameState.Instance.Player_1.count_step = 8; break; // Рейнджер: высокая скорость
                 default: ChouseClass(); break; // Если некорректный выбор - повтор
             }
         }

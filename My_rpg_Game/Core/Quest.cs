@@ -13,8 +13,7 @@
         public string Description { get; set; }
         public bool IsCompleted { get; set; } = false;
 
-        // Глобальный список активных квестов игрока (как инвентарь)
-        public static List<Quest> ActiveQuests = new();
+        
 
         // Конструктор
         public Quest(QuestID id, string name, string description)
@@ -37,15 +36,19 @@
                 // LINQ запрос: 
                 // Where - фильтрует сильных
                 // Take(5) - берет максимум 5 первых из списка
-                var targets = Monster.MonsterList
-                    .Where(m => m.PowerScore > 150)
+                var targets = GameState.Instance.MonstersList
+                    .Where(m => m.PowerScore >= 50)
                     .Take(5)
                     .ToList();
+                foreach (var target in targets)
+                {
+                    Console.WriteLine($"{target.monster_name}");
+                }
             }
         }
 
-        // 3. Твоя заготовка для проверки прогресса
-        // Заметь: параметры точно такие же, как в OnStep (int y, int x, ref bool cancel)
+        
+        
         public void CheckProgress(int targetY, int targetX, ref bool cancelMove)
         {
             // Если квест уже сдан/выполнен, нам не нужно ничего проверять
@@ -58,13 +61,13 @@
             switch ((int)Id)
             {
                 case 1:
-                    var StrongMonster = Monster.MonsterList
-                                    .Where(m => m.PowerScore >= 150)
+                    var StrongMonster = GameState.Instance.MonstersList
+                                    .Where(m => m.PowerScore >= 50)
                                     .ToList();
                     if (StrongMonster.Count == 0)
                     {
                         this.IsCompleted = true;
-                        Execution.Player_1.gold += 30;
+                        GameState.Instance.Player_1.gold += 30;
 
                         // Выводим красивое сообщение о завершении
                         Console.WriteLine($"\nПОЗДРАВЛЯЕМ! Квест '{Name}' выполнен!");
@@ -74,7 +77,7 @@
 
                         // === ОЧИСТКА ===
                         // 1. Удаляем сам себя из списка активных квестов
-                        ActiveQuests.Remove(this);
+                        GameState.Instance.ActiveQuests.Remove(this);
 
                         // 2. ВАЖНО: Отписываем этот конкретный метод от события шага, 
                         // чтобы игра больше не тратила ресурсы на его проверку!

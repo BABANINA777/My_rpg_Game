@@ -56,8 +56,13 @@ namespace My_Game
         {new Resourses((ResourceType)0), new Resourses((ResourceType)0), new Resourses((ResourceType)1), new Resourses((ResourceType)2), new Resourses((ResourceType)3) };
         public static void OnPlayerStep(int y, int x, ref bool cancel)
         {
+<<<<<<< HEAD
+            cancel = true; // всегда разрешает перемещение
+            char cell = GameState.Instance.map[y, x]; // что на клетке
+=======
             cancel = true; // ГўГ±ГҐГЈГ¤Г  Г°Г Г§Г°ГҐГёГ ГҐГІ ГЇГҐГ°ГҐГ¬ГҐГ№ГҐГ­ГЁГҐ
             char cell = GameState.map[y, x]; // Г·ГІГ® Г­Г  ГЄГ«ГҐГІГЄГҐ
+>>>>>>> e642043cd50117782f04de6a26c579e6f756385c
 
             // ГЃГ»Г±ГІГ°Г»Г© ГґГЁГ«ГјГІГ°: ГҐГ±Г«ГЁ ГЅГІГ® Г­ГҐ Г°ГҐГ±ГіГ°Г± вЂ” ГўГ»ГµГ®Г¤ГЁГ¬
             if (cell != 'G' && cell != 'W' && cell != 'S' && cell != 'B')
@@ -73,6 +78,16 @@ namespace My_Game
                     break; // Г­Г ГёГ«ГЁ вЂ” Г¤Г Г«ГјГёГҐ Г­ГҐ ГЁГ№ГҐГ¬
                 }
             }
+<<<<<<< HEAD
+            // Выдаём эффект в зависимости от символа клетки
+            if (cell == 'G') { GameState.Instance.Player_1.gold++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'W') { GameState.Instance.Player_1.wood++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'S') { GameState.Instance.Player_1.stone++; Console.WriteLine($"Получено +1{found.Name}"); Console.ReadKey(); }
+            else if (cell == 'B') { GameState.Instance.Player_1.PlayerRPGClass_1.class_state.damage += 2; Console.WriteLine($"Получен бонус +2 к урону"); Console.ReadKey(); }// бонус к урону
+
+            // Удаляем ресурс с карты
+            GameState.Instance.map[Execution.cordy, Execution.cordx] = ' ';
+=======
             // Г‚Г»Г¤Г ВёГ¬ ГЅГґГґГҐГЄГІ Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г±ГЁГ¬ГўГ®Г«Г  ГЄГ«ГҐГІГЄГЁ
             if (cell == 'G') { Execution.Player_1.gold++; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­Г® +1{found.Name}"); Console.ReadKey(); }
             else if (cell == 'W') { Execution.Player_1.wood++; Console.WriteLine($"ГЏГ®Г«ГіГ·ГҐГ­Г® +1{found.Name}"); Console.ReadKey(); }
@@ -81,6 +96,7 @@ namespace My_Game
 
             // Г“Г¤Г Г«ГїГҐГ¬ Г°ГҐГ±ГіГ°Г± Г± ГЄГ Г°ГІГ»
             GameState.map[Execution.cordy, Execution.cordx] = ' ';
+>>>>>>> e642043cd50117782f04de6a26c579e6f756385c
 
             //ГіГЎГҐГ°Г ГҐГ¬ Г®ГЎГєГҐГЄГІ ГЁГ§ Г±ГЇГЁГ±ГЄГ 
             ResourseList.Remove(found);
